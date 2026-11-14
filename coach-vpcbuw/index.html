@@ -524,12 +524,29 @@ section.folded .fsum:not(:empty) { display: inline; }
   }
   bnLoad();
 
+  /* 공개 회원 목록 (2026-11-14 트레이너 요청 — 팀장님 PT 노트 페이지에서 보이게):
+     선생님 페이지를 열 때마다 창고 저장소에 pub:m:roster-list:members = [{slug,name,sex,goal,start}] 저장(선생님 열쇠).
+     누구나 GET ?m=roster-list 응답의 kv["pub:m:roster-list:members"] 로 읽음 (창고 코드 변경·재배포 없음).
+     폰에서 회원을 만들고·고치고·지우는 기능이 생기면 그 저장 끝에 window.ptPublishRoster(rows) 를 부를 것. */
+  function publishRoster(rows) {
+    var key = bnKey();
+    if (!API || !key) return Promise.resolve(null);
+    var list = (rows || []).filter(function (r) { return r && r.M; }).map(function (r) {
+      return { slug: r.slug, name: r.M.name || "", sex: r.M.sex || "", goal: r.M.goal || "", start: (r.M.journey && r.M.journey.start) || "" };
+    });
+    var body = { a: "kv_set", m: "coach", key: key, k: "pub:m:roster-list:members", v: list };
+    function once() { return fetch(API, { method: "POST", body: JSON.stringify(body) }).then(function (r) { return r.json(); }); }
+    return once().catch(function () { return new Promise(function (ok) { setTimeout(ok, 2500); }).then(once); }).catch(function () { return null; });
+  }
+  window.ptPublishRoster = publishRoster;
+
   function render() {
     var box = document.getElementById("list");
     Promise.all(LIST.map(function (slug) {
       return loadMember(slug).then(function (M) { return { slug: slug, M: M }; }).catch(function () { return null; });
     })).then(function (rows) {
       rows = rows.filter(Boolean);
+      publishRoster(rows);
       box.innerHTML = rows.map(function (r) { return card(r.slug, r.M, null); }).join("");
       fsum("list", rows.length + "명");
       if (isPad() && !paneSlug) { var last = ""; try { last = sessionStorage.getItem("ptpane") || ""; } catch (e) {} if (last) paneOpen(last); }
