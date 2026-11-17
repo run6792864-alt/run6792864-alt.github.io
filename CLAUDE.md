@@ -72,6 +72,7 @@ _tools/anatomy_v3.py  인체모형 v3 (자극 부위 그림). build(경로, 앞 
 | 회원 | 주소 | 성별 |
 |---|---|---|
 | 홍길동 (샘플, 가상) | m/sample-k7d2qx/ | M |
+| 양보윤 | m/boyun-gb2cwi/ | F |
 
 ## 새 회원 PT 노트 만들기
 0. **PT 시작일을 꼭 받기** (트레이너이 말해줌, "10월"처럼 달만 주면 그 달 15일로). 안 알려주면 물어볼 것. → data.js journey.start
@@ -234,6 +235,9 @@ _tools/anatomy_v3.py  인체모형 v3 (자극 부위 그림). build(경로, 앞 
 - 숫자·기록은 members.js 회원들의 data.js에서 자동 계산: 담당 회원 = 이름 수(그룹은 2명), 루틴 업데이트 = 루틴 버전 숫자 합, 복습지 수, 맞춤 식단 수, 최근 관리 기록 = notices(“PT 노트가 열렸어요” 제외) 최신 8개, 회원별 현황 = 단계·개월차·주 n회·루틴 버전·복습지·식단.
 - 상담 손님에게 보이는 화면이라 회원 이름은 가운데 글자를 O로 가림(공지 제목 속 이름도). 비포애프터 사진은 옛 소개 PPT에 쓰던 것만(새 사진은 동의받은 회원만).
 - "✎ 고치기": 담당 회원 수(비우면 자동), 등록 혜택, 연락처 — 그 휴대폰 localStorage(ptsales)에만 저장. 혜택·연락처가 비어 있으면 그 줄이 안 보임.
+
+## 영상 없는 복습지 (2026-11-17 양보윤 회원님 — 종이 복습지 PDF를 옮김)
+- forms 항목에 `"no_video": true` → 01 '오늘 내 자세'가 영상 대신 poster.jpg 사진(app.js renderForm). step2.svg(움직이는 아이콘, loop)·step3.svg(멈춘 아이콘)는 exicons EXI.svg(키,{sex}) 결과를 파일로 저장(xmlns 붙여서). 영상을 받으면 form.mp4 등 만들고 no_video 빼기.
 
 ## 자세 복습지 미디어 만들기 (영상 1개 기준)
 - 웹 영상: `ffmpeg -i in.mov -an -vf "scale=540:-2,fps=30" -c:v libx264 -preset veryfast -crf 27 -pix_fmt yuv420p -movflags +faststart form.mp4`

@@ -43,6 +43,7 @@
   try { var rtc = JSON.parse(localStorage.getItem(RT_LS) || "null"); if (rtc) rtUse(rtc); } catch (e) {}
   /* 종목 이름 → 루틴일지 아이콘 (data.js에서 icon을 따로 주면 그게 우선) */
   var ICON_BY_NAME = {
+    "힙 어브덕션": "outer_thigh_pin", "핵 스쿼트": "hack_squat",
     "플랫 덤벨프레스": "db_bench_press", "덤벨 벤치프레스": "db_bench_press", "바벨 벤치프레스": "bench_press", "벤치프레스": "bench_press",
     "인클라인 덤벨 프레스": "incline_db_press", "스미스 인클라인 프레스": "smith_incline_press", "인클라인 프레스 머신": "incline_machine_press", "머신 인클라인 프레스": "incline_machine_press",
     "체스트 프레스": "chest_press", "뉴텍 체스트 프레스 머신": "lying_chest_press", "뉴텍 체스트프레스 머신": "lying_chest_press", "펙덱 플라이": "pec_deck", "펙덱": "pec_deck", "케이블 푸쉬다운": "cable_pushdown",
@@ -1590,7 +1591,9 @@
       '<div class="benefit">' + esc(f.benefit) + '</div></div></div>' +
       '<div class="keypoint"><small>KEY POINT</small><p>' + esc(f.key_point) + '</p></div></div>';
 
-    h += '<section>' + head("01", "오늘 내 자세", "영상으로 확인해요") +
+    if (f.no_video) h += '<section>' + head("01", "오늘 내 자세", "사진으로 확인해요") +
+      '<div class="player"><img src="' + esc(D) + 'poster.jpg" alt="오늘 수업 자세 사진" style="display:block;width:100%;height:100%;object-fit:cover"><span class="chip">오늘 수업 사진</span></div></section>';
+    else h += '<section>' + head("01", "오늘 내 자세", "영상으로 확인해요") +
       '<div class="player"><video id="main" poster="' + esc(D) + 'poster.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto" data-src="' + esc(D) + 'form.mp4" data-gif="' + esc(D) + 'form.webp"></video>' +
       '<img id="gifFallback" alt="오늘 수업 영상 (반복 재생)" hidden>' +
       '<span class="chip">▶ 오늘 수업 영상</span><button class="tapper" id="tap" type="button" aria-label="영상 재생 / 멈춤"></button>' +
